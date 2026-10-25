@@ -1,0 +1,242 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+struct SNode { int data; SNode* next; };
+struct DNode { int data; DNode* prev; DNode* next; };
+
+SNode* shead = nullptr;
+DNode* dhead = nullptr;
+
+//Singly Linked List 
+int countSS() {
+    int c = 0;
+    for (SNode* t = shead; t; t = t->next) c++;
+    return c;
+}
+
+int findIndexSS(int val) {
+    int i = 0;
+    for (SNode* t = shead; t; t = t->next, i++)
+        if (t->data == val) return i;
+    return -1;
+}
+
+void insertingSS(int data, int index) {
+    if (index < 0) { cout << "Invalid index\n"; return; }
+    SNode* newNode = new SNode{data, nullptr};
+
+    if (index == 0) {
+        newNode->next = shead;
+        shead = newNode;
+        return;
+    }
+    SNode* temp = shead;
+    for (int i = 0; i < index - 1 && temp; i++) temp = temp->next;
+
+    if (!temp) { cout << "Invalid index\n"; delete newNode; return; }
+
+    newNode->next = temp->next;
+    temp->next = newNode;
+}
+
+void displaySS() {
+    for (SNode* t = shead; t; t = t->next) cout << t->data << " -> ";
+    cout << "NULL\n";
+}
+
+//Doubly Linked List
+int countDLL() {
+    int c = 0;
+    for (DNode* t = dhead; t; t = t->next) c++;
+    return c;
+}
+
+int findIndexDLL(int val) {
+    int i = 0;
+    for (DNode* t = dhead; t; t = t->next, i++)
+        if (t->data == val) return i;
+    return -1;
+}
+
+void insertingDLL(int data, int index) {
+    if (index < 0) { cout << "Invalid index\n"; return; }
+    DNode* newNode = new DNode{data, nullptr, nullptr};
+
+    if (index == 0) {
+        newNode->next = dhead;
+        if (dhead) dhead->prev = newNode;
+        dhead = newNode;
+        return;
+    }
+    DNode* temp = dhead;
+    for (int i = 0; i < index - 1 && temp; i++) temp = temp->next;
+
+    if (!temp) { cout << "Invalid index\n"; delete newNode; return; }
+
+    newNode->next = temp->next;
+    newNode->prev = temp;
+    if (temp->next) temp->next->prev = newNode;
+    temp->next = newNode;
+}
+
+void displayForwardDLL() {
+    cout << "NULL <-> ";
+    for (DNode* t = dhead; t; t = t->next) cout << t->data << " <-> ";
+    cout << "NULL\n";
+}
+
+void displayBackwardDLL() {
+    if (!dhead) { cout << "List empty\n"; return; }
+    DNode* t = dhead;
+    while (t->next) t = t->next;
+    cout << "NULL <-> ";
+    for (; t; t = t->prev) cout << t->data << " <-> ";
+    cout << "NULL\n";
+}
+
+/* ---------------- LL Management System ---------------- */
+void singlyMenu() {
+    while (true) {
+        cout << "\n..............................................\n"
+                "Singly Linked List\n"
+                "..............................................\n"
+                "1. Insert at beginning\n2. Insert at End\n3. Insert at Position\n"
+                "4. Insert After a Node\n5. Insert Before a Node\n\n"
+                "6. Delete from Beginning\n7. Delete from End\n8. Delete from Position\n9. Delete by Value\n\n"
+                "10. Search\n11. Update\n12. Display\n13. Count Nodes\n14. Find Maximum\n"
+                "15. Find Minimum\n16. Find Middle Element\n17. Reverse\n18. Sort\n"
+                "19. Remove Duplicates\n20. Back\n"
+                "Enter your choice: ";
+        int c;
+        cin >> c;
+        int n, pos, val, idx;
+
+        if (c == 1) {
+            cout << "Enter the number to be inserted: "; cin >> n;
+            insertingSS(n, 0);
+        } else if (c == 2) {
+            cout << "Enter the number to be inserted: "; cin >> n;
+            insertingSS(n, countSS());
+        } else if (c == 3) {
+            cout << "Enter the number and position (0-based): "; cin >> n >> pos;
+            insertingSS(n, pos);
+        } else if (c == 4) {
+            cout << "Insert after which value? "; cin >> val;
+            idx = findIndexSS(val);
+            if (idx == -1) cout << "Value not found\n";
+            else { cout << "Enter the number to be inserted: "; cin >> n; insertingSS(n, idx + 1); }
+        } else if (c == 5) {
+            cout << "Insert before which value? "; cin >> val;
+            idx = findIndexSS(val);
+            if (idx == -1) cout << "Value not found\n";
+            else { cout << "Enter the number to be inserted: "; cin >> n; insertingSS(n, idx); }
+        } else if (c >= 6 && c <= 11) {
+            cout << "Not implemented yet\n";   
+        } else if (c == 12) {
+            displaySS();
+        } else if (c == 13) {
+            cout << "Count: " << countSS() << "\n";
+        } else if (c >= 14 && c <= 19) {
+            cout << "Not implemented yet\n";   
+        } else if (c == 20) {
+            return;
+        } else {
+            cout << "Invalid choice\n";
+        }
+    }
+}
+
+void doublyMenu() {
+    while (true) {
+        cout << "\n..............................................\n"
+                "Doubly Linked List\n"
+                "..............................................\n"
+                "1. Insert at beginning\n2. Insert at End\n3. Insert at Position\n"
+                "4. Insert After a Node\n5. Insert Before a Node\n\n"
+                "6. Delete from Beginning\n7. Delete from End\n8. Delete from Position\n9. Delete by Value\n\n"
+                "10. Search\n11. Update\n12. Display Forward\n13. Display Backward\n14. Count Nodes\n"
+                "15. Find Maximum\n16. Find Minimum\n17. Find Middle Element\n18. Reverse\n"
+                "19. Sort\n20. Remove Duplicates\n21. Back\n"
+                "Enter your choice: ";
+        int c;
+        cin >> c;
+        int n, pos, val, idx;
+
+        if (c == 1) {
+            cout << "Enter the number to be inserted: "; cin >> n;
+            insertingDLL(n, 0);
+        } else if (c == 2) {
+            cout << "Enter the number to be inserted: "; cin >> n;
+            insertingDLL(n, countDLL());
+        } else if (c == 3) {
+            cout << "Enter the number and position (0-based): "; cin >> n >> pos;
+            insertingDLL(n, pos);
+        } else if (c == 4) {
+            cout << "Insert after which value? "; cin >> val;
+            idx = findIndexDLL(val);
+            if (idx == -1) cout << "Value not found\n";
+            else { cout << "Enter the number to be inserted: "; cin >> n; insertingDLL(n, idx + 1); }
+        } else if (c == 5) {
+            cout << "Insert before which value? "; cin >> val;
+            idx = findIndexDLL(val);
+            if (idx == -1) cout << "Value not found\n";
+            else { cout << "Enter the number to be inserted: "; cin >> n; insertingDLL(n, idx); }
+        } else if (c >= 6 && c <= 11) {
+            cout << "Not implemented yet\n";   
+        } else if (c == 12) {
+            displayForwardDLL();
+        } else if (c == 13) {
+            displayBackwardDLL();
+        } else if (c == 14) {
+            cout << "Count: " << countDLL() << "\n";
+        } else if (c >= 15 && c <= 20) {
+            cout << "Not implemented yet\n"; 
+        } else if (c == 21) {
+            return;
+        } else {
+            cout << "Invalid choice\n";
+        }
+    }
+}
+
+void compareMenu() {
+    while (true) {
+        cout << "\n..............................................\n"
+                "Compare Singly vs Doubly Linked List\n"
+                "..............................................\n"
+                "1. Compare Insertion\n2. Compare Deletion\n3. Compare Searching\n"
+                "4. Compare Traversal\n5. Back\n"
+                "Enter your choice: ";
+        int c;
+        cin >> c;
+        if (c >= 1 && c <= 4) cout << "Not implemented yet\n";
+        else if (c == 5) return;
+        else cout << "Invalid choice\n";
+    }
+}
+
+int main() {
+    // default size of both lists = 2
+    shead = new SNode{10, nullptr};
+    shead->next = new SNode{20, nullptr};
+
+    dhead = new DNode{10, nullptr, nullptr};
+    dhead->next = new DNode{20, dhead, nullptr};
+
+    while (true) {
+        cout << "\n..............................................\n"
+                "Linked List Management System\n"
+                "..............................................\n"
+                "1. Singly Linked List\n2. Doubly Linked List\n"
+                "3. Compare Singly vs Doubly Linked List\n4. Exit\n"
+                "Enter your choice: ";
+        int choice;
+        cin >> choice;
+
+        if (choice == 1) singlyMenu();
+        else if (choice == 2) doublyMenu();
+        else if (choice == 3) compareMenu();
+        else if (choice == 4) { cout << "Exiting the program...\n"; return 0; }
+        else cout << "Invalid choice\n";
+    }
+}
